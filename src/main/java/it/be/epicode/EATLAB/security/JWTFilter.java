@@ -1,7 +1,7 @@
 package it.be.epicode.EATLAB.security;
 
 
-import it.be.epicode.EATLAB.entities.Owner;
+import it.be.epicode.EATLAB.services.OwnersService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -29,6 +29,8 @@ public class JWTFilter extends OncePerRequestFilter {
     @Autowired
     private UsersService usersService;
 
+    @Autowired
+    private OwnersService ownersService;
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String authHeader = request.getHeader("Authorization");
@@ -42,11 +44,12 @@ public class JWTFilter extends OncePerRequestFilter {
           jwtTools.verifyToken(accessToken);
 
         String id = jwtTools.extractIdFromToken(accessToken);
+
         User user = usersService.findById(UUID.fromString(id));
 
-             Authentication authentication = new UsernamePasswordAuthenticationToken(user, null);
+        Authentication authentication = new UsernamePasswordAuthenticationToken(user, null);
 
-              SecurityContextHolder.getContext().setAuthentication(authentication);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
 
           filterChain.doFilter(request, response);
 
