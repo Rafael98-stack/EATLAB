@@ -1,13 +1,10 @@
 package it.be.epicode.EATLAB.services;
 
-import it.be.epicode.EATLAB.payloads.users.SignUpUserDTO;
-import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import it.be.epicode.EATLAB.entities.User;
 import it.be.epicode.EATLAB.exceptions.NotFoundException;
@@ -47,6 +44,5 @@ public class UsersService {
     public User findByEmail(String email) {
         return usersDAO.findByEmail(email).orElseThrow(() -> new NotFoundException("Email " + email + " non trovata"));
     }
-
 
 }

@@ -18,6 +18,7 @@ import java.util.UUID;
 @Entity
 @Table(name = "users")
 public class User {
+
     @Id
     @GeneratedValue
     private UUID id;
@@ -26,6 +27,9 @@ public class User {
     private String email;
     private String password;
     private String avatar;
+
+    @Enumerated(EnumType.STRING)
+    private Type type;
 
     @Enumerated(EnumType.STRING)
     private Role role;
@@ -40,6 +44,7 @@ public class User {
         this.password = password;
         this.avatar = avatar;
         this.role = Role.USER;
+        this.type = Type.CUSTOMER;
     }
 
 //    @Override
@@ -71,4 +76,5 @@ public class User {
 //    public boolean isEnabled() {
 //        return true;
 //    }
+
 }

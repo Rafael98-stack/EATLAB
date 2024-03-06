@@ -1,6 +1,7 @@
 package it.be.epicode.EATLAB.security;
 
 
+import it.be.epicode.EATLAB.entities.Owner;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

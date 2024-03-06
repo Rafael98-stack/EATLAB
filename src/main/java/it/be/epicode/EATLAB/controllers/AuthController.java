@@ -20,6 +20,7 @@ public class AuthController {
     @Autowired
     private UsersService usersService;
 
+
     @PostMapping("/login")
     public AfterLoginUserTokenDTO login(@RequestBody LoginUserDTO payload) {
         return new AfterLoginUserTokenDTO(authService.authenticateUserAndGenerateToken(payload));
@@ -31,4 +32,5 @@ public class AuthController {
 
         return this.authService.saveUser(newUser);
     }
+
 }

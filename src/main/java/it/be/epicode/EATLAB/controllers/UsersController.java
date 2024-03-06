@@ -38,7 +38,7 @@ public class UsersController {
 
 
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT) // Status Code 204
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void findByIdAndDelete(@PathVariable UUID id) {
         this.usersService.findByIdAndDelete(id);
     }

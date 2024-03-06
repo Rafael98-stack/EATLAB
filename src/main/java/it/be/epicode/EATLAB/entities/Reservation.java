@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.util.UUID;
 
 @Getter
@@ -19,6 +20,7 @@ public class Reservation {
     @GeneratedValue
     private UUID id;
     private long unique_code;
+private LocalDate date;
 
     @ManyToOne
     private User user;
