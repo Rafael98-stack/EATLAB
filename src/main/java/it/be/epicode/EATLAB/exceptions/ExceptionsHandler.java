@@ -3,11 +3,11 @@ package it.be.epicode.EATLAB.exceptions;
 import it.be.epicode.EATLAB.exceptions.ErrorsPayloadWithList;
 import it.be.epicode.EATLAB.exceptions.UnauthorizedException;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.nio.file.AccessDeniedException;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -37,7 +37,6 @@ public class ExceptionsHandler {
     public ErrorsPayload handleAccessDenied(AccessDeniedException ex) {
         return new ErrorsPayload("Non hai l'accesso a questo endpoint", LocalDateTime.now());
     }
-
 
     @ExceptionHandler(NotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
