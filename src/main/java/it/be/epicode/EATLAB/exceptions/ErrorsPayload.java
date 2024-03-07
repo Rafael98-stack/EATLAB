@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @Getter
 @AllArgsConstructor
 public class ErrorsPayload {
-    // Questa classe rappresenta il payload delle risposte di errore
+
     private String message;
     private LocalDateTime timestamp;
 }
