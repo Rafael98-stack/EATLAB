@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import it.be.epicode.EATLAB.entities.User;
 
@@ -16,6 +17,22 @@ public class UsersController {
 
     @Autowired
     private UsersService usersService;
+
+    @GetMapping("/me")
+    public User getProfile(@AuthenticationPrincipal User currentAuthenticatedUser){
+return currentAuthenticatedUser;
+    }
+
+    @PutMapping("/me")
+    public User getCurrentAndUpdate(@AuthenticationPrincipal User currentAuthenticatedUser, @RequestBody User updatedUser){
+return this.findByIdAndUpdate(currentAuthenticatedUser.getId(),updatedUser);
+    }
+
+    @DeleteMapping("/me")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteCurrent(@AuthenticationPrincipal User currentAuthenticatedUser){
+this.findByIdAndDelete(currentAuthenticatedUser.getId());
+    }
 
     @GetMapping
     @PreAuthorize("hasAuthority('ADMIN')")
