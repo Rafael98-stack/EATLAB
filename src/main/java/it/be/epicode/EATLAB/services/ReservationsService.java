@@ -3,8 +3,9 @@ package it.be.epicode.EATLAB.services;
 import it.be.epicode.EATLAB.entities.Reservation;
 import it.be.epicode.EATLAB.entities.User;
 import it.be.epicode.EATLAB.exceptions.NotFoundException;
-import it.be.epicode.EATLAB.payloads.reservations.ReservationDTO;
-import it.be.epicode.EATLAB.payloads.users.SignUpUserDTO;
+import it.be.epicode.EATLAB.exceptions.UnauthorizedException;
+import it.be.epicode.EATLAB.payloads.reservations.ReservationCreationDTO;
+import it.be.epicode.EATLAB.payloads.reservations.ReservationUpdatingDTO;
 import it.be.epicode.EATLAB.repositories.ReservationDAO;
 import it.be.epicode.EATLAB.repositories.UsersDAO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -45,7 +48,12 @@ public class ReservationsService {
         return reservationDAO.findById(reservationId).orElseThrow(() -> new NotFoundException(reservationId));
     }
 
-    public Reservation saveReservation(Reservation reservation) {
+    public Reservation saveReservation(ReservationCreationDTO reservationCreationDTO) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User currentUser = (User) authentication.getPrincipal();
+
+        Reservation reservation = new Reservation(reservationCreationDTO.date(), currentUser, reservationCreationDTO.persons());
+
         reservation.setUnique_code(  uniqueRandomCode.nextLong(100000,500000));
         return reservationDAO.save(reservation);
     }
@@ -58,11 +66,44 @@ public class ReservationsService {
         return reservationDAO.save(found);
     }
 
+    public Reservation findByIdAndUpdate(UUID reservationId, ReservationUpdatingDTO updatingReservation) {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userEmail = authentication.getName();
+
+        Reservation found = this.findByIdAndUserEmail(reservationId,userEmail);
+        if (found != null) {
+
+            if (updatingReservation.persons() == 0) {
+                found.setPersons(found.getPersons());
+            } else {
+                found.setPersons(updatingReservation.persons());
+            }
+
+          if (  updatingReservation.date() == null) {
+              found.setDate(found.getDate());
+          } else {
+              found.setDate(updatingReservation.date());
+          }
+
+            return reservationDAO.save(found);
+        } else {
+            throw  new UnauthorizedException("You are not authorized to update this reservation");
+        }
+    }
+
     public Reservation findByIdAndUserEmail(UUID reservationId, String userEmail) {
         return reservationDAO.findByIdAndCustomerEmail(reservationId, userEmail);
     }
 
     public void findByIdAndDelete(UUID reservationId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userEmail = authentication.getName();
+
+        if (this.isUserAuthorized(reservationId, userEmail)) {
+        } else {
+            throw new UnauthorizedException("You are not authorized to delete this reservation");
+        }
         Reservation found = this.findById(reservationId);
         reservationDAO.delete(found);
     }

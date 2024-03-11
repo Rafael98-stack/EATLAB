@@ -24,6 +24,7 @@ public class Reservation {
     private UUID id;
     private long unique_code;
 private LocalDate date;
+private int persons;
 
     @ManyToOne
     @JsonIgnore
@@ -32,9 +33,10 @@ private LocalDate date;
 //    @ManyToOne
 //    private  Restaurant restaurant;
 
-    public Reservation( LocalDate date, User customer) {
+    public Reservation( LocalDate date, User customer, int persons) {
 //        this.unique_code = unique_code;
         this.date = date;
         this.customer = customer;
+        this.persons = persons;
     }
 }
