@@ -36,12 +36,12 @@ public class ReservationsService {
     }
 
 
-    public List<Reservation> getReservationsByUsername(String username) {
-        // Implementa la logica per recuperare le prenotazioni dell'utente specificato dal repository
-        return reservationDAO.findByCustomerUsername(username);
+    public List<Reservation> getReservationsByUserEmail(String userEmail) {
+
+        return reservationDAO.findByCustomerEmail(userEmail);
     }
 
-    public Reservation findById(long reservationId) {
+    public Reservation findById(UUID reservationId) {
         return reservationDAO.findById(reservationId).orElseThrow(() -> new NotFoundException(reservationId));
     }
 
@@ -50,7 +50,7 @@ public class ReservationsService {
         return reservationDAO.save(reservation);
     }
 
-    public Reservation findByIdAndUpdate(long reservationId, Reservation modifiedReservation) {
+    public Reservation findByIdAndUpdate(UUID reservationId, Reservation modifiedReservation) {
         Reservation found = this.findById(reservationId);
         found.setUnique_code(modifiedReservation.getUnique_code());
         found.setDate(modifiedReservation.getDate());
@@ -58,8 +58,19 @@ public class ReservationsService {
         return reservationDAO.save(found);
     }
 
-    public void findByIdAndDelete(long reservationId) {
+    public Reservation findByIdAndUserEmail(UUID reservationId, String userEmail) {
+        return reservationDAO.findByIdAndCustomerEmail(reservationId, userEmail);
+    }
+
+    public void findByIdAndDelete(UUID reservationId) {
         Reservation found = this.findById(reservationId);
         reservationDAO.delete(found);
+    }
+
+    public boolean isUserAuthorized(UUID reservationId, String userEmail) {
+
+        Reservation reservation = reservationDAO.findById(reservationId).orElse(null);
+
+        return reservation != null && reservation.getCustomer().getEmail().equals(userEmail);
     }
 }
