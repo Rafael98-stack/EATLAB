@@ -1,6 +1,7 @@
 package it.be.epicode.EATLAB.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -18,7 +19,8 @@ import java.util.UUID;
 @NoArgsConstructor
 @Entity
 @Table(name = "users")
-@JsonIgnoreProperties({"credentialsNonExpired","accountNonExpired","authorities","username","accountNonLocked","enabled"})
+@JsonIgnoreProperties({"credentialsNonExpired","accountNonExpired","authorities","username","accountNonLocked","enabled","role","reservation","username"})
+
 public class User implements UserDetails {
 
     @Id
@@ -29,18 +31,13 @@ public class User implements UserDetails {
     private String email;
     private String password;
     private String avatar;
+    private String username;
 
     @Enumerated(EnumType.STRING)
     private Type type;
 
     @Enumerated(EnumType.STRING)
     private Role role;
-
-//    @OneToMany
-//    private Restaurant restaurant;
-
-    @OneToMany
-    private List<Reservation> reservation;
 
     public User(String name, String surname, String email, String password, String avatar) {
         this.name = name;

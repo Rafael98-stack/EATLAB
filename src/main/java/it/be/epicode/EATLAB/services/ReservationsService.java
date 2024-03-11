@@ -14,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
@@ -34,16 +35,19 @@ public class ReservationsService {
         return reservationDAO.findAll(pageable);
     }
 
+
+    public List<Reservation> getReservationsByUsername(String username) {
+        // Implementa la logica per recuperare le prenotazioni dell'utente specificato dal repository
+        return reservationDAO.findByCustomerUsername(username);
+    }
+
     public Reservation findById(long reservationId) {
         return reservationDAO.findById(reservationId).orElseThrow(() -> new NotFoundException(reservationId));
     }
 
-    public Reservation saveReservation(ReservationDTO payload,UUID userId) {
-User user = usersDAO.findById(userId).orElseThrow(() -> new NotFoundException(userId));
-
-        Reservation newReservation = new Reservation( payload.date(),user);
-newReservation.setUnique_code(  uniqueRandomCode.nextLong(100000,500000));
-        return reservationDAO.save(newReservation);
+    public Reservation saveReservation(Reservation reservation) {
+        reservation.setUnique_code(  uniqueRandomCode.nextLong(100000,500000));
+        return reservationDAO.save(reservation);
     }
 
     public Reservation findByIdAndUpdate(long reservationId, Reservation modifiedReservation) {
