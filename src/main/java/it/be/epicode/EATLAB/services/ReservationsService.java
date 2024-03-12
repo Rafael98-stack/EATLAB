@@ -78,7 +78,9 @@ if (currentUser.getType() == Type.CUSTOMER) {
 User currentUser = (User) authentication.getPrincipal();
 
         Reservation found = this.findByIdAndUserEmail(reservationId,userEmail);
-        if (found != null && currentUser.getType() == Type.CUSTOMER) {
+        if (currentUser.getType() == Type.OWNER) {
+            throw new UnauthorizedException("You are not allowed to Updating a customer's info");
+        } else { if (found != null) {
 
             if (updatingReservation.persons() == 0) {
                 found.setPersons(found.getPersons());
@@ -86,15 +88,16 @@ User currentUser = (User) authentication.getPrincipal();
                 found.setPersons(updatingReservation.persons());
             }
 
-          if (  updatingReservation.date() == null) {
-              found.setDate(found.getDate());
-          } else {
-              found.setDate(updatingReservation.date());
-          }
+            if (  updatingReservation.date() == null) {
+                found.setDate(found.getDate());
+            } else {
+                found.setDate(updatingReservation.date());
+            }
 
             return reservationDAO.save(found);
         } else {
             throw  new UnauthorizedException("You are not authorized to update this reservation");
+        }
         }
     }
 
