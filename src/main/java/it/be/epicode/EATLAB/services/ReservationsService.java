@@ -60,7 +60,6 @@ if (currentUser.getType() == Type.CUSTOMER) {
 } else {
     throw new  UnauthorizedException ("You are not allowed here, cause from your 'TYPE'");
 }
-
     }
 
     public Reservation findByIdAndUpdate(UUID reservationId, Reservation modifiedReservation) {
