@@ -1,6 +1,7 @@
 package it.be.epicode.EATLAB.controllers;
 
 import it.be.epicode.EATLAB.entities.Reservation;
+import it.be.epicode.EATLAB.entities.Type;
 import it.be.epicode.EATLAB.entities.User;
 import it.be.epicode.EATLAB.exceptions.UnauthorizedException;
 import it.be.epicode.EATLAB.payloads.reservations.ReservationCreationDTO;
@@ -36,12 +37,15 @@ public class ReservationsController {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userEmail = authentication.getName();
+User currentUser = (User) authentication.getPrincipal();
+if (currentUser.getType() == Type.CUSTOMER) {
+    List<Reservation> reservations = reservationsService.getReservationsByUserEmail(userEmail);
 
+    return ResponseEntity.ok(reservations);
+} else {
+    throw new UnauthorizedException("Unable to return your list of reservations, you are not a Customer");
+}
 
-        List<Reservation> reservations = reservationsService.getReservationsByUserEmail(userEmail);
-
-
-        return ResponseEntity.ok(reservations);
     }
 
     @PutMapping("/{reservationId}")

@@ -1,6 +1,7 @@
 package it.be.epicode.EATLAB.services;
 
 import it.be.epicode.EATLAB.entities.Reservation;
+import it.be.epicode.EATLAB.entities.Type;
 import it.be.epicode.EATLAB.entities.User;
 import it.be.epicode.EATLAB.exceptions.NotFoundException;
 import it.be.epicode.EATLAB.exceptions.UnauthorizedException;
@@ -51,11 +52,15 @@ public class ReservationsService {
     public Reservation saveReservation(ReservationCreationDTO reservationCreationDTO) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User currentUser = (User) authentication.getPrincipal();
+if (currentUser.getType() == Type.CUSTOMER) {
+    Reservation reservation = new Reservation(reservationCreationDTO.date(), currentUser, reservationCreationDTO.persons());
 
-        Reservation reservation = new Reservation(reservationCreationDTO.date(), currentUser, reservationCreationDTO.persons());
+    reservation.setUnique_code(  uniqueRandomCode.nextLong(100000,500000));
+    return reservationDAO.save(reservation);
+} else {
+    throw new  UnauthorizedException ("You are not allowed here, cause from your 'TYPE'");
+}
 
-        reservation.setUnique_code(  uniqueRandomCode.nextLong(100000,500000));
-        return reservationDAO.save(reservation);
     }
 
     public Reservation findByIdAndUpdate(UUID reservationId, Reservation modifiedReservation) {
@@ -70,9 +75,10 @@ public class ReservationsService {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userEmail = authentication.getName();
+User currentUser = (User) authentication.getPrincipal();
 
         Reservation found = this.findByIdAndUserEmail(reservationId,userEmail);
-        if (found != null) {
+        if (found != null && currentUser.getType() == Type.CUSTOMER) {
 
             if (updatingReservation.persons() == 0) {
                 found.setPersons(found.getPersons());
