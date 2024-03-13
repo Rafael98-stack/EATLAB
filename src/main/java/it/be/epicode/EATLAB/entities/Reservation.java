@@ -30,13 +30,14 @@ private int persons;
     @JsonIgnore
     private User customer;
 
-//    @ManyToOne
-//    private  Restaurant restaurant;
+    @ManyToOne
+    @JsonIgnoreProperties({"reservations"})
+    private  Restaurant restaurant;
 
-    public Reservation( LocalDate date, User customer, int persons) {
-//        this.unique_code = unique_code;
+    public Reservation( LocalDate date, User customer, int persons, Restaurant restaurant) {
         this.date = date;
         this.customer = customer;
         this.persons = persons;
+        this.restaurant = restaurant;
     }
 }

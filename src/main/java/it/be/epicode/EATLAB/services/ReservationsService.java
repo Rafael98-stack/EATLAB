@@ -1,6 +1,7 @@
 package it.be.epicode.EATLAB.services;
 
 import it.be.epicode.EATLAB.entities.Reservation;
+import it.be.epicode.EATLAB.entities.Restaurant;
 import it.be.epicode.EATLAB.entities.Type;
 import it.be.epicode.EATLAB.entities.User;
 import it.be.epicode.EATLAB.exceptions.NotFoundException;
@@ -8,6 +9,7 @@ import it.be.epicode.EATLAB.exceptions.UnauthorizedException;
 import it.be.epicode.EATLAB.payloads.reservations.ReservationCreationDTO;
 import it.be.epicode.EATLAB.payloads.reservations.ReservationUpdatingDTO;
 import it.be.epicode.EATLAB.repositories.ReservationDAO;
+import it.be.epicode.EATLAB.repositories.RestaurantDAO;
 import it.be.epicode.EATLAB.repositories.UsersDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -18,6 +20,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
@@ -30,8 +33,13 @@ public class ReservationsService {
 
     Random uniqueRandomCode = new Random();
 
+    private List<Reservation> reservations = new ArrayList<>();
+
     @Autowired
     private ReservationDAO reservationDAO;
+
+    @Autowired
+    private RestaurantsService restaurantsService;
 
     public Page<Reservation> getReservations(int pageNumber, int size, String orderBy) {
         if (size > 100) size = 100;
@@ -39,21 +47,28 @@ public class ReservationsService {
         return reservationDAO.findAll(pageable);
     }
 
-
     public List<Reservation> getReservationsByUserEmail(String userEmail) {
 
         return reservationDAO.findByCustomerEmail(userEmail);
+    }
+
+    public List<Reservation> getReservationsByRestaurantId(UUID restaurantId) {
+        return reservationDAO.findByRestaurantId(restaurantId);
     }
 
     public Reservation findById(UUID reservationId) {
         return reservationDAO.findById(reservationId).orElseThrow(() -> new NotFoundException(reservationId));
     }
 
-    public Reservation saveReservation(ReservationCreationDTO reservationCreationDTO) {
+    public Reservation saveReservation(ReservationCreationDTO reservationCreationDTO, UUID restaurantId) {
+
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User currentUser = (User) authentication.getPrincipal();
+        Restaurant restaurant = restaurantsService.findById(restaurantId);
+
 if (currentUser.getType() == Type.CUSTOMER) {
-    Reservation reservation = new Reservation(reservationCreationDTO.date(), currentUser, reservationCreationDTO.persons());
+
+    Reservation reservation = new Reservation(reservationCreationDTO.date(), currentUser, reservationCreationDTO.persons(),restaurant);
 
     reservation.setUnique_code(  uniqueRandomCode.nextLong(100000,500000));
     return reservationDAO.save(reservation);

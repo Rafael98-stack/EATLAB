@@ -25,11 +25,10 @@ public class ReservationsController {
     @Autowired
     private ReservationsService reservationsService;
 
-    @PostMapping("/creation")
-    public Reservation createReservation(@RequestBody ReservationCreationDTO reservationDTO) {
+    @PostMapping("/creation/{restaurantId}")
+    public Reservation createReservation(@RequestBody ReservationCreationDTO reservationDTO,@PathVariable UUID restaurantId) {
 
-
-        return reservationsService.saveReservation(reservationDTO);
+        return reservationsService.saveReservation(reservationDTO,restaurantId);
     }
 
     @GetMapping("/myreservations")

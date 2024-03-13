@@ -12,5 +12,6 @@ import java.util.UUID;
 public interface RestaurantDAO extends JpaRepository<Restaurant, UUID> {
 
     Restaurant findByIdAndOwnerEmail(UUID restaurantId, String userEmail);
+
     List<Restaurant> findByOwnerEmail(String email);
 }

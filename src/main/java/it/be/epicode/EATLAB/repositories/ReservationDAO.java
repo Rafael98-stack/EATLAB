@@ -1,6 +1,7 @@
 package it.be.epicode.EATLAB.repositories;
 
 import it.be.epicode.EATLAB.entities.Reservation;
+import it.be.epicode.EATLAB.entities.Restaurant;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -11,6 +12,8 @@ import java.util.UUID;
 public interface ReservationDAO extends JpaRepository<Reservation, UUID> {
 
     Reservation findByIdAndCustomerEmail(UUID reservationId, String userEmail);
+
+    List<Reservation> findByRestaurantId(UUID restaurantId);
 
     List<Reservation> findByCustomerEmail(String email);
 }
