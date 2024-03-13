@@ -1,5 +1,6 @@
 package it.be.epicode.EATLAB.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -26,6 +27,7 @@ public class Restaurant {
     private String city;
 
     @ManyToOne
+    @JsonIgnore
     private User owner;
 
     @Enumerated(EnumType.STRING)
