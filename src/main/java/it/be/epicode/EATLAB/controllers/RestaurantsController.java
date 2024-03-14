@@ -45,6 +45,8 @@ public class RestaurantsController {
         if (currentUser.getType() == Type.OWNER) {
             List<Restaurant> restaurants = restaurantsService.getRestaurantsByUserEmail(userEmail);
 
+
+
             for (Restaurant restaurant : restaurants) {
                 List<Reservation> reservations = reservationsService.getReservationsByRestaurantId(restaurant.getId());
                 restaurant.setReservations(reservations);

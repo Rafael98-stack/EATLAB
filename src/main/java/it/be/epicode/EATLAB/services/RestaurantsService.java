@@ -58,7 +58,7 @@ found.setTelephone_contact(restaurantUpdatingDTO.telephone_contact());
 found.setSeat(restaurantUpdatingDTO.seat());
 found.setAddress(restaurantUpdatingDTO.address());
 found.setCity(restaurantUpdatingDTO.city());
-
+found.setAvailability(restaurantUpdatingDTO.availability());
             return restaurantDAO.save(found);
         } else {
             throw  new UnauthorizedException("You are not authorized to update this restaurant");

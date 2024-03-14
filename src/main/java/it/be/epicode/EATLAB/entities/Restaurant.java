@@ -47,5 +47,6 @@ public class Restaurant {
         this.address = address;
         this.city = city;
         this.owner = owner;
+        this.availability = Availability.AVAILABLE;
     }
 }
