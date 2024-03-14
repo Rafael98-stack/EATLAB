@@ -5,6 +5,7 @@ import it.be.epicode.EATLAB.entities.Restaurant;
 import it.be.epicode.EATLAB.entities.Type;
 import it.be.epicode.EATLAB.entities.User;
 import it.be.epicode.EATLAB.exceptions.NotFoundException;
+import it.be.epicode.EATLAB.exceptions.SeatLimitExceededException;
 import it.be.epicode.EATLAB.exceptions.UnauthorizedException;
 import it.be.epicode.EATLAB.payloads.reservations.ReservationCreationDTO;
 import it.be.epicode.EATLAB.payloads.reservations.ReservationUpdatingDTO;
@@ -20,6 +21,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -67,6 +69,22 @@ public class ReservationsService {
         Restaurant restaurant = restaurantsService.findById(restaurantId);
 
 if (currentUser.getType() == Type.CUSTOMER) {
+
+    LocalDate reservationDate = reservationCreationDTO.date();
+
+    List<Reservation> existingReservations = reservationDAO.findByRestaurantIdAndDate(restaurantId, reservationDate);
+
+    int totalSeatsReserved = existingReservations.stream()
+            .mapToInt(Reservation::getPersons)
+            .sum();
+
+    int totalSeatsRequested = reservationCreationDTO.persons();
+    int maxSeatsAllowed = restaurant.getSeat();
+
+    if (totalSeatsReserved + totalSeatsRequested > maxSeatsAllowed) {
+        throw new SeatLimitExceededException("Reservation for this date: " + reservationCreationDTO.date() + " is not available for this restaurant, choose another date.");
+    }
+
 
     Reservation reservation = new Reservation(reservationCreationDTO.date(), currentUser, reservationCreationDTO.persons(),restaurant);
 
