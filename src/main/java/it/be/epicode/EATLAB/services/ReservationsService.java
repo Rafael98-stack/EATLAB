@@ -1,6 +1,7 @@
 package it.be.epicode.EATLAB.services;
 
 import it.be.epicode.EATLAB.entities.*;
+import it.be.epicode.EATLAB.exceptions.BadRequestException;
 import it.be.epicode.EATLAB.exceptions.NotFoundException;
 import it.be.epicode.EATLAB.exceptions.SeatLimitExceededException;
 import it.be.epicode.EATLAB.exceptions.UnauthorizedException;
@@ -78,6 +79,9 @@ if (currentUser.getType() == Type.CUSTOMER) {
     int totalSeatsRequested = reservationCreationDTO.persons();
     int maxSeatsAllowed = restaurant.getSeat();
 
+    if (restaurant.getAvailability() == Availability.NOT_AVAILABLE) {
+        throw new BadRequestException("This Restaurant is not Available for the moment");
+    }
 
     if (totalSeatsReserved + totalSeatsRequested > maxSeatsAllowed) {
         throw new SeatLimitExceededException("Reservation for this date: " + reservationCreationDTO.date() + " is not available for this restaurant, choose another date.");
