@@ -21,6 +21,7 @@ public class Restaurant {
     @GeneratedValue
     private UUID Id;
     private String logo;
+    private String title;
     private String description;
     private int rating;
     private String telephone_contact;
@@ -39,8 +40,9 @@ public class Restaurant {
     @Enumerated(EnumType.STRING)
     private Availability availability;
 
-    public Restaurant(String logo, String description, String telephone_contact, int seat, String address, String city, User owner) {
+    public Restaurant(String logo,String title, String description, String telephone_contact, int seat, String address, String city, User owner) {
         this.logo = logo;
+        this.title = title;
         this.description= description;
         this.telephone_contact = telephone_contact;
         this.seat = seat;

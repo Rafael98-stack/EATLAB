@@ -79,7 +79,7 @@ found.setAvailability(restaurantUpdatingDTO.availability());
         User currentUser = (User) authentication.getPrincipal();
         if (currentUser.getType() == Type.OWNER) {
 
-Restaurant restaurant = new Restaurant(restaurantCreationDTO.logo(), restaurantCreationDTO.description(), restaurantCreationDTO.telephone_contact(), restaurantCreationDTO.seat(), restaurantCreationDTO.address(), restaurantCreationDTO.city(),currentUser);
+Restaurant restaurant = new Restaurant(restaurantCreationDTO.logo(),restaurantCreationDTO.title(), restaurantCreationDTO.description(), restaurantCreationDTO.telephone_contact(), restaurantCreationDTO.seat(), restaurantCreationDTO.address(), restaurantCreationDTO.city(),currentUser);
 
             return restaurantDAO.save(restaurant);
         } else {

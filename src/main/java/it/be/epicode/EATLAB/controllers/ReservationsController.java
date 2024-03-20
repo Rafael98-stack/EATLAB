@@ -25,12 +25,14 @@ public class ReservationsController {
     @Autowired
     private ReservationsService reservationsService;
 
+    @CrossOrigin(origins = "http://localhost:4200")
     @PostMapping("/creation/{restaurantId}")
     public Reservation createReservation(@RequestBody ReservationCreationDTO reservationDTO,@PathVariable UUID restaurantId) {
 
         return reservationsService.saveReservation(reservationDTO,restaurantId);
     }
 
+    @CrossOrigin(origins = "http://localhost:4200")
     @GetMapping("/myreservations")
     public ResponseEntity<List<Reservation>> getMyReservations() {
 
@@ -47,6 +49,7 @@ if (currentUser.getType() == Type.CUSTOMER) {
 
     }
 
+    @CrossOrigin(origins = "http://localhost:4200")
     @PutMapping("/{reservationId}")
     public Reservation updateReservation(@PathVariable UUID reservationId, @RequestBody ReservationUpdatingDTO modifiedReservation) {
 
@@ -54,6 +57,7 @@ if (currentUser.getType() == Type.CUSTOMER) {
 
     }
 
+    @CrossOrigin(origins = "http://localhost:4200")
     @GetMapping
     @PreAuthorize("hasAuthority('ADMIN')")
     public Page<Reservation> getAllReservations(@RequestParam(defaultValue = "0") int page,
@@ -63,6 +67,7 @@ if (currentUser.getType() == Type.CUSTOMER) {
         return this.reservationsService.getReservations(page, size, orderBy);
     }
 
+    @CrossOrigin(origins = "http://localhost:4200")
     @DeleteMapping("/{reservationId}")
     public void deleteReservation(@PathVariable UUID reservationId) {
 
