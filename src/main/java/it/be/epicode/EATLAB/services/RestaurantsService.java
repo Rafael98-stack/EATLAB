@@ -53,6 +53,7 @@ public class RestaurantsService {
         } else { if (found != null) {
 
 found.setLogo(restaurantUpdatingDTO.logo());
+found.setTitle(restaurantUpdatingDTO.title());
      found.setDescription(restaurantUpdatingDTO.description());
 found.setTelephone_contact(restaurantUpdatingDTO.telephone_contact());
 found.setSeat(restaurantUpdatingDTO.seat());
