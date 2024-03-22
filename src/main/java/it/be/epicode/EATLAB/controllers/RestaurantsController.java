@@ -17,10 +17,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/restaurants")
 public class RestaurantsController {
 
@@ -30,14 +32,14 @@ public class RestaurantsController {
     @Autowired
     private ReservationsService reservationsService;
 
-    @CrossOrigin(origins = "http://localhost:4200")
+
     @PostMapping("/creation")
     public Restaurant createRestaurant(@RequestBody RestaurantCreationDTO restaurantCreationDTO) {
 
         return restaurantsService.saveRestaurant(restaurantCreationDTO);
     }
 
-    @CrossOrigin(origins = "http://localhost:4200")
+
     @GetMapping("/myrestaurants")
     public ResponseEntity<List<Restaurant>> getMyRestaurants() {
 
@@ -56,11 +58,12 @@ public class RestaurantsController {
 
             return ResponseEntity.ok(restaurants);
         } else {
-            throw new UnauthorizedException("Unable to return your list of restaurants, you are not an owner.");
+            throw new UnauthorizedException("Unable to return your list of reservations, you are not a Owner");
+
         }
     }
 
-    @CrossOrigin(origins = "http://localhost:4200")
+
         @GetMapping
         public Page<Restaurant> getAllRestaurants ( @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "10") int size,
@@ -69,7 +72,7 @@ public class RestaurantsController {
             return this.restaurantsService.getRestaurants(page, size, orderBy);
         }
 
-    @CrossOrigin(origins = "http://localhost:4200")
+
     @PutMapping("/{restaurantId}")
     public Restaurant updateReservation(@PathVariable UUID restaurantId, @RequestBody RestaurantUpdatingDTO restaurantUpdatingDTO) {
 
@@ -77,7 +80,7 @@ public class RestaurantsController {
 
     }
 
-    @CrossOrigin(origins = "http://localhost:4200")
+
     @DeleteMapping("/{restaurantId}")
     public void deleteRestaurant(@PathVariable UUID restaurantId) {
 

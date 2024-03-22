@@ -28,8 +28,13 @@ public class JWTFilter extends OncePerRequestFilter {
     @Autowired
     private UsersService usersService;
 
+
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+
+
+
         String authHeader = request.getHeader("Authorization");
         if (authHeader == null || !authHeader.startsWith("Bearer "))
             throw new UnauthorizedException("Per favore metti il token nell'header");

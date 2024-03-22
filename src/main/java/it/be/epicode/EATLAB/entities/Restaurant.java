@@ -20,7 +20,7 @@ public class Restaurant {
     @Id
     @GeneratedValue
     private UUID Id;
-    private String logo;
+    @Column(length = 1000000)    private String logo;
     private String title;
     private String description;
     private int rating;
