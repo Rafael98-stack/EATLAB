@@ -1,4 +1,7 @@
 package it.be.epicode.EATLAB.payloads.users;
 
-public record AfterLoginUserTokenDTO(String accessToken) {
+import jakarta.persistence.EnumType;
+
+public record AfterLoginUserTokenDTO(String accessToken,
+                                     Enum userType) {
 }

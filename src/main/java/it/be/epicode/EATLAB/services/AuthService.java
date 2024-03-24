@@ -38,6 +38,15 @@ public class AuthService {
         }
     }
 
+    public Enum<Type> authenticatedUserType (LoginUserDTO payload) {
+        User user = usersService.findByEmail(payload.email());
+        if(user!= null){
+            return user.getType();
+        } else {
+            return null;
+        }
+    }
+
     public User saveUser(SignUpUserDTO payload) {
 
 

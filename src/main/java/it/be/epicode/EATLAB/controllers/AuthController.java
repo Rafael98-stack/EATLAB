@@ -20,9 +20,14 @@ public class AuthController {
     private AuthService authService;
 
 
+//    @PostMapping("/login/user")
+//    public AfterLoginUserTokenDTO login(@RequestBody LoginUserDTO payload) {
+//        return new AfterLoginUserTokenDTO(authService.authenticateUserAndGenerateToken(payload));
+//    }
+
     @PostMapping("/login/user")
     public AfterLoginUserTokenDTO login(@RequestBody LoginUserDTO payload) {
-        return new AfterLoginUserTokenDTO(authService.authenticateUserAndGenerateToken(payload));
+        return new AfterLoginUserTokenDTO(authService.authenticateUserAndGenerateToken(payload),authService.authenticatedUserType(payload));
     }
 
 
